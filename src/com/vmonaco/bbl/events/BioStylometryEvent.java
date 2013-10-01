@@ -3,10 +3,12 @@ package com.vmonaco.bbl.events;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vmonaco.bbl.Mappable;
+import org.json.simple.JSONObject;
+
+import com.vmonaco.bbl.BioEvent;
 import com.vmonaco.bbl.Utility;
 
-public class BioStylometryEvent implements Mappable {
+public class BioStylometryEvent implements BioEvent {
 
     public static final String event_type = "stylometry_event";
     
@@ -23,13 +25,12 @@ public class BioStylometryEvent implements Mappable {
         return "Stylometry: " + text;
     }
     
-    public Map toMap() {
+    public JSONObject toJSON() {
         HashMap<String, Object> values = new HashMap<String, Object>();
-        values.put("event_type", event_type);
-        values.put("start_time", ""+start_time);
-        values.put("end_time", ""+end_time);
+        values.put("timestart", ""+start_time);
+        values.put("timeend", ""+end_time);
         values.put("text", text);
-        return values;
+        return new JSONObject(values);
     }
     
     @Override

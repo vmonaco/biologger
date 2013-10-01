@@ -20,9 +20,7 @@ public class BioLogger {
     
     private static boolean FAILED = false;
     private SessionData mSessionData;
-    private Database mDatabase;
     private Buffer mBuffer;
-    private Thread mBufferThread;
     private Listener mListener;
     private GUI mGui;
 
@@ -37,37 +35,25 @@ public class BioLogger {
                 BioLogger.LOGGER.severe("Make sure that Assistive Devices is enabled.");
                 BioLogger.LOGGER.info("Go to Preferences->Universal Access and make sure the checkbox 'Enabled Access for Assistive Devices' is marked.");
             }
-            CustomExceptionHandler.submitCrashReport(e);
             return;
         }
-        
-        if (! mDatabase.openSession()) {
-            FAILED = true;
-            return;
-        }
-        
-        mBufferThread = new Thread(mBuffer);
-        mBufferThread.start();
         
         GlobalScreen.getInstance().addNativeKeyListener(mListener);
         GlobalScreen.getInstance().addNativeMouseListener(mListener);
         GlobalScreen.getInstance().addNativeMouseMotionListener(mListener);
         GlobalScreen.getInstance().addNativeMouseWheelListener(mListener);
-        mGui.setStatus("Recording session as :  " + mSessionData.identity);
+        mGui.setStatus("Recording session as :  " + mSessionData.username);
     }
 
+    public void flush() {
+    	mBuffer.flush();
+    }
+    
     public void stopLogging() {
-        if (FAILED) {
-            return;
-        }
         GlobalScreen.unregisterNativeHook();
-        mDatabase.closeSession();
-        mBuffer.stop();
-        mBuffer.finish();
     }
 
     public void close() {
-        stopLogging();
         System.runFinalization();
         System.exit(0);
     }
@@ -83,24 +69,25 @@ public class BioLogger {
             String keyString = NativeKeyEvent.getKeyText(i).toLowerCase();
             if (! keySet.contains(keyString)  && ! keyString.contains("unknown")) {
                 keySet.add(keyString);
-                System.out.println("vk_map['" + keyString + "'] = " + i);
+                BioLogger.LOGGER.info(keyString + " = " + i);
             }
         }
     }
     
     public static SessionData createSession(String[] args) {
         SessionData session = new SessionData();
-        session.identity = args[0];
-        session.key = args[1];
+        session.enrollURL = args[0];
+        session.username = args[1];
         session.os_name = System.getProperty("os.name").trim();
         session.os_arch = System.getProperty("os.arch").trim();
         session.os_version = System.getProperty("os.version").trim();
         session.locale = InputContext.getInstance().getLocale().toString().trim();
-        session.tags.add("bbl");
+        session.task = args[2];
+        session.tags = "";
         
-        if (args.length > 2) {
-            for (int i = 2; i < args.length; i++) {
-                session.tags.add(args[i]);
+        if (args.length > 3) {
+            for (int i = 3; i < args.length; i++) {
+                session.tags += args[i];
             }
         }
         
@@ -109,8 +96,7 @@ public class BioLogger {
     
     public void initialize(String[] args) {
         mSessionData = createSession(args);
-        mDatabase = new Database(mSessionData);
-        mBuffer = new Buffer(mDatabase);
+        mBuffer = new Buffer(mSessionData);
         mListener = new Listener(mBuffer);
         mGui = new GUI(this);
     }
@@ -119,24 +105,22 @@ public class BioLogger {
 //        printKeyMap();
 
         if (args.length < 2) {
-            System.out.println("Usage: bbl identity key [tags]");
+            System.out.println("Usage: bbl url identity [tags]");
             System.exit(1);
         }
         
-        Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler());
+//        Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler());
         BioLogger app = new BioLogger();
         
         try {
             ServerSocket ss = new ServerSocket(PORT, 0, InetAddress.getByAddress(new byte[] {127,0,0,1}));
             app.initialize(args);
         } catch (BindException e) {
-            CustomExceptionHandler.submitCrashReport(e);
-            System.out.println("Logger already running");
+        	BioLogger.LOGGER.severe("Logger already running");
             app.alert("Logger already running.");
             System.exit(1);
         } catch (IOException e) {
-            CustomExceptionHandler.submitCrashReport(e);
-            System.out.println("Unexpected error.");
+        	BioLogger.LOGGER.severe("Unexpected error.");
             app.alert("Unexpected error.");
             System.exit(2);
         }

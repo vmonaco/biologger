@@ -8,6 +8,9 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 
 public class Utility {
 
@@ -38,7 +41,7 @@ public class Utility {
         try {
             image = new Robot().createScreenCapture(capture);
         } catch (AWTException e) {
-            CustomExceptionHandler.submitCrashReport(e);
+        	BioLogger.LOGGER.severe(Utility.createCrashReport(e));
         }
         
         Rectangle fillX = new Rectangle();
@@ -71,5 +74,29 @@ public class Utility {
         graph.dispose();
         
         return image;
+    }
+    
+    public static String padRight(String s, int n) {
+        return String.format("%1$-" + n + "s", s);  
+    }
+    
+    public static String createCrashReport(Throwable e) {
+        final Writer result = new StringWriter();
+        final PrintWriter printWriter = new PrintWriter(result);
+        e.printStackTrace(printWriter);
+        printWriter.close();
+        
+        String header = "";
+        header += "os.name    : " + System.getProperty("os.name") + "\n";
+        header += "os.arch    : " + System.getProperty("os.arch") + "\n";
+        header += "os.version : " + System.getProperty("os.version") + "\n";
+        
+        System.getProperties().keySet();
+        for (Object k : System.getProperties().keySet()) {
+            header += padRight(k.toString(), 40) + ": " + System.getProperty((String) k) + "\n";
+        }
+        
+        String stacktrace = result.toString();
+        return header + "\nStacktrace:\n" + stacktrace;
     }
 }

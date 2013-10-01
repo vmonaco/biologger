@@ -3,10 +3,12 @@ package com.vmonaco.bbl.events;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vmonaco.bbl.Mappable;
+import org.json.simple.JSONObject;
+
+import com.vmonaco.bbl.BioEvent;
 import com.vmonaco.bbl.Utility;
 
-public class BioMotionEvent implements Mappable {
+public class BioMotionEvent implements BioEvent {
 
     public static final String event_type = "motion_event";
     
@@ -26,16 +28,13 @@ public class BioMotionEvent implements Mappable {
         return "Mouse motion, time: "+ time + ", position: " + x + ", " + y + ", dragged: " + dragged + ", mods: " + modifier_string; 
     }
     
-    public Map toMap() {
+    public JSONObject toJSON() {
         HashMap<String, Object> values = new HashMap<String, Object>();
-        values.put("event_type", event_type);
         values.put("time", ""+time);
         values.put("x", ""+x);
         values.put("y", ""+y);
-        values.put("modifier_code", ""+modifier_code);
-        values.put("modifier_string", ""+modifier_string);
         values.put("dragged", ""+dragged);
-        return values;
+        return new JSONObject(values);
     }
     
     @Override

@@ -3,10 +3,12 @@ package com.vmonaco.bbl.events;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vmonaco.bbl.Mappable;
+import org.json.simple.JSONObject;
+
+import com.vmonaco.bbl.BioEvent;
 import com.vmonaco.bbl.Utility;
 
-public class BioKeystrokeEvent implements Mappable {
+public class BioKeystrokeEvent implements BioEvent {
 
     public static final String event_type = "keystroke_event";
 
@@ -24,20 +26,17 @@ public class BioKeystrokeEvent implements Mappable {
     }
     
     public String logString() {
-        return "Keystroke, key: " + key_string;
+        return "Keystroke, key: " + key_string + ", " + key_code;
     }
 
-    public Map toMap() {
+    public JSONObject toJSON() {
         HashMap<String, Object> values = new HashMap<String, Object>();
-        values.put("event_type", event_type);
-        values.put("press_time", ""+press_time);
-        values.put("release_time", ""+release_time);
-        values.put("key_code", ""+key_code);
-        values.put("key_string", key_string);
-        values.put("modifier_code", ""+modifier_code);
-        values.put("modifier_string", ""+modifier_string);
-        values.put("key_location", ""+key_location);
-        return values;
+        
+        values.put("timepress", ""+press_time);
+        values.put("timerelease", ""+release_time);
+        values.put("keycode", ""+key_code);
+        values.put("keylocation", ""+key_location);
+        return new JSONObject(values);
     }
     
     @Override

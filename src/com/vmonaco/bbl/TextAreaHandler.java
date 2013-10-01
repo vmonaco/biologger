@@ -4,6 +4,7 @@ import java.util.logging.LogRecord;
 
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 
@@ -30,11 +31,11 @@ public class TextAreaHandler extends java.util.logging.Handler {
 
     @Override
     public void publish(final LogRecord record) {
-        SwingUtilities.invokeLater(new Runnable() {
-
+    	
+    	SwingWorker<String, String> worker = new SwingWorker<String, String>() {
             @Override
-            public void run() {
-                if (mTextArea.getLineCount() > mMaxLines) {
+            protected String doInBackground() throws Exception {
+            	if (mTextArea.getLineCount() > mMaxLines) {
                     // remove the first line
                     Element root = mTextArea.getDocument()
                             .getDefaultRootElement();
@@ -43,13 +44,37 @@ public class TextAreaHandler extends java.util.logging.Handler {
                         mTextArea.getDocument().remove(first.getStartOffset(),
                                 first.getEndOffset());
                     } catch (BadLocationException e) {
-                        CustomExceptionHandler.submitCrashReport(e);
+                    	BioLogger.LOGGER.severe(Utility.createCrashReport(e));
                     }
                 }
                 mTextArea.append(record.getMessage() + "\n");
                 mTextArea.setCaretPosition( mTextArea.getDocument().getLength());
+                return null;
             }
-        });
+        };
+        
+        worker.execute();
+    	
+//        SwingUtilities.invokeLater(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                if (mTextArea.getLineCount() > mMaxLines) {
+//                    // remove the first line
+//                    Element root = mTextArea.getDocument()
+//                            .getDefaultRootElement();
+//                    Element first = root.getElement(0);
+//                    try {
+//                        mTextArea.getDocument().remove(first.getStartOffset(),
+//                                first.getEndOffset());
+//                    } catch (BadLocationException e) {
+//                        CustomExceptionHandler.submitCrashReport(e);
+//                    }
+//                }
+//                mTextArea.append(record.getMessage() + "\n");
+//                mTextArea.setCaretPosition( mTextArea.getDocument().getLength());
+//            }
+//        });
     }
 
     public JTextArea getTextArea() {

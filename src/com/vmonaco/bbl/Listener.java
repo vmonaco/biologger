@@ -70,7 +70,7 @@ NativeMouseInputListener
         bioEvent.modifier_code = event.getModifiers();
         bioEvent.modifier_string = lowerCSVString(NativeMouseEvent.getModifiersText(event.getModifiers()));
         
-        mBuffer.addEvent(bioEvent);
+        mBuffer.addScrollEvent(bioEvent);
         BioLogger.LOGGER.log(Level.INFO, bioEvent.logString());
     }
 
@@ -85,7 +85,7 @@ NativeMouseInputListener
         bioEvent.modifier_string = lowerCSVString(NativeMouseEvent.getModifiersText(event.getModifiers()));
         bioEvent.dragged = 1;
         
-        mBuffer.addEvent(bioEvent);
+        mBuffer.addMotionEvent(bioEvent);
         BioLogger.LOGGER.info(bioEvent.logString());
     }
 
@@ -100,7 +100,7 @@ NativeMouseInputListener
         bioEvent.modifier_string = lowerCSVString(NativeMouseEvent.getModifiersText(event.getModifiers()));
         bioEvent.dragged = 0;
         
-        mBuffer.addEvent(bioEvent);
+        mBuffer.addMotionEvent(bioEvent);
         BioLogger.LOGGER.info(bioEvent.logString());
     }
 
@@ -140,7 +140,7 @@ NativeMouseInputListener
         bioEvent.release_x = event.getX();
         bioEvent.release_y = event.getY();
         
-        mBuffer.addEvent(bioEvent);
+        mBuffer.addClickEvent(bioEvent);
         BioLogger.LOGGER.info(bioEvent.logString());
     }
 
@@ -179,7 +179,7 @@ NativeMouseInputListener
         
         BioKeystrokeEvent bioEvent = mActiveKeys.remove(event.getRawCode());
         bioEvent.release_time = event.getWhen();
-        mBuffer.addEvent(bioEvent);
+        mBuffer.addKeystrokeEvent(bioEvent);
         BioLogger.LOGGER.info(bioEvent.logString());
     }
 
@@ -236,7 +236,7 @@ NativeMouseInputListener
             mCurrentStylometry.text += s;
         }
         
-        mBuffer.addEvent(mCurrentStylometry);
+        mBuffer.addStylometryEvent(mCurrentStylometry);
         BioLogger.LOGGER.info(mCurrentStylometry.logString());
         mCurrentStylometry = null;
         mKeysTyped.clear();

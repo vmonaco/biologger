@@ -7,12 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import org.apache.ws.commons.util.Base64;
+import org.json.simple.JSONObject;
 
-import com.vmonaco.bbl.CustomExceptionHandler;
-import com.vmonaco.bbl.Mappable;
+import com.vmonaco.bbl.BioLogger;
+import com.vmonaco.bbl.BioEvent;
 import com.vmonaco.bbl.Utility;
 
-public class BioClickEvent implements Mappable {
+public class BioClickEvent implements BioEvent {
     
     public static final String event_type = "click_event";
     
@@ -36,29 +37,26 @@ public class BioClickEvent implements Mappable {
         return "Mouse clicked, button: "+ button_code + ", position: " + press_x + ", " + press_y; 
     }
 
-    public Map toMap() {
+    public JSONObject toJSON() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         
         try {
             ImageIO.write(image, "png", out);
         } catch (IOException e) {
             e.printStackTrace();
-            CustomExceptionHandler.submitCrashReport(e);
+            BioLogger.LOGGER.severe(Utility.createCrashReport(e));
         }
         
         HashMap<String, Object> values = new HashMap<String, Object>();
-        values.put("event_type", event_type);
-        values.put("press_time", ""+press_time);
-        values.put("release_time", ""+release_time);
-        values.put("button_code", ""+button_code);
-        values.put("press_x", ""+press_x);
-        values.put("press_y", ""+press_y);
-        values.put("release_x", ""+release_x);
-        values.put("release_y", ""+release_y);
-        values.put("modifier_code", ""+modifier_code);
-        values.put("modifier_string", ""+modifier_string);
+        values.put("timepress", ""+press_time);
+        values.put("timerelease", ""+release_time);
+        values.put("button", ""+button_code);
+        values.put("xpress", ""+press_x);
+        values.put("ypress", ""+press_y);
+        values.put("xrelease", ""+release_x);
+        values.put("yrelease", ""+release_y);
         values.put("image", Base64.encode(out.toByteArray()));
-        return values;
+        return new JSONObject(values);
     }
     
     @Override
@@ -67,8 +65,7 @@ public class BioClickEvent implements Mappable {
         try {
             ImageIO.write(image, "png", out);
         } catch (IOException e) {
-            e.printStackTrace();
-            CustomExceptionHandler.submitCrashReport(e);
+        	BioLogger.LOGGER.severe(Utility.createCrashReport(e));
         }
         return new String[] {event_type, ""+press_time, ""+release_time, 
                 ""+button_code, ""+press_x, ""+press_y, ""+release_x, ""+release_y, 
