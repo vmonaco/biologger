@@ -1,5 +1,14 @@
 # Behavioral Biometric Logger
 
+## Copyright
+
+Permission is granted to use this code in any way as long as the following publications are acknowledged:
+
+1. Monaco, John V., et al. "Developing a keystroke biometric system for continual authentication of computer users." Intelligence and Security Informatics Conference (EISIC), 2012 European. IEEE, 2012.
+2. Monaco, John V., et al. "Recent Advances in the Development of a Long-Text-Input Keystroke Biometric Authentication System for Arbitrary Text Input." Intelligence and Security Informatics Conference (EISIC), 2013 European. IEEE, 2013.
+
+The authors will not be held liable for any damages that occur as a result of using this code.
+
 ## About
 
 This application is designed to capture the user input to a computer over the course of a session. It captures events system wide by registering system wide hooks. It is designed to be web-launched from a browser with Java web start.
