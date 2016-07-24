@@ -1,4 +1,4 @@
-# Behavioral Biometric Logger
+# Behavioral Biometrics Logger
 
 This application is designed to capture the user input to a computer over the course of a session. It captures events system wide by registering system wide hooks. It can be web-launched from a browser using Java web start.
 
