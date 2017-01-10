@@ -6,7 +6,7 @@ This application uses the [jnativehook](https://github.com/kwhat/jnativehook/) l
 
 To run, download the latest release and run the executable jar. From the command line,
 
-$ java -jar biologger.jar
+    $ java -jar biologger.jar
 
 By default, the CSV files will be created in the current working directory. To specify a different output directory, use the `-o` option. 
 
