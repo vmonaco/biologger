@@ -8,9 +8,7 @@ To run, download the [latest release](https://github.com/vmonaco/biologger/relea
 
     $ java -jar biologger.jar
 
-By default, the CSV files will be created in the current working directory. To specify a different output directory, use the `-o` option. 
-
-Particular event types can also be ignored, such as `-im` to ignore mouse motion events. The full usage is:
+By default, the CSV files will be created in the current working directory. To specify a different output directory, use the `-o` option. Certain event types can also be ignored, such as `-im` to ignore mouse motion events. The full usage is:
 ```
 usage: biologger
  -h,--help                print this help message
