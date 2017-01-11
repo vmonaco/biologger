@@ -1,4 +1,4 @@
-package com.vmonaco.bbl;
+package com.vmonaco.bio;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,12 +17,13 @@ import org.apache.commons.cli.ParseException;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
+import org.jnativehook.keyboard.NativeKeyEvent;
 
-import com.vmonaco.bbl.events.BioClickEvent;
-import com.vmonaco.bbl.events.BioEvent;
-import com.vmonaco.bbl.events.BioKeystrokeEvent;
-import com.vmonaco.bbl.events.BioMotionEvent;
-import com.vmonaco.bbl.events.BioWheelEvent;
+import com.vmonaco.bio.events.BioClickEvent;
+import com.vmonaco.bio.events.BioEvent;
+import com.vmonaco.bio.events.BioKeystrokeEvent;
+import com.vmonaco.bio.events.BioMotionEvent;
+import com.vmonaco.bio.events.BioWheelEvent;
 
 public class BioLogger {
 	public static final Logger LOGGER = Logger.getLogger("com.vmonaco.bbl");
@@ -43,7 +44,7 @@ public class BioLogger {
 		mListener = new Listener(mBuffer);
 
 		if (showWindow) {
-			mGui = new GUI(this);
+			mGui = new GUI(this, outDir);
 		}
 	}
 
@@ -76,7 +77,6 @@ public class BioLogger {
 		if (mClassMap.containsKey(BioWheelEvent.class)) {
 			GlobalScreen.addNativeMouseWheelListener(mListener);
 		}
-		mGui.setStatus("Saving files to: " + mOutDir);
 	}
 
 	public void stopLogging() {
@@ -94,6 +94,16 @@ public class BioLogger {
 		System.exit(0);
 	}
 
+	public static void printKeyMap() {
+		System.out.println("key_code,key_name");
+		for (int i = 0; i < 65536; i++) {
+			String keyName = NativeKeyEvent.getKeyText(i).toLowerCase().replace(' ', '_');
+			if (!keyName.contains("unknown")) {
+				System.out.println("" + i + "," + keyName);
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 		// Disable jnativehook logging
 		LogManager.getLogManager().reset();
@@ -106,9 +116,10 @@ public class BioLogger {
 		options.addOption("im", "ignore-motion", false, "ignore ignore mouse motion events");
 		options.addOption("ic", "ignore-click", false, "ignore mouse click events");
 		options.addOption("iw", "ignore-wheel", false, "ignore mouse wheel events");
+		options.addOption("pk", "print-keys", false, "print the full key map and exit");
 		options.addOption("v", "verbose", false, "verbose mode");
 		options.addOption("h", "help", false, "print this help message");
-		
+
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd;
@@ -122,12 +133,17 @@ public class BioLogger {
 			System.exit(1);
 			return;
 		}
-		
+
 		if (cmd.hasOption("help")) {
 			formatter.printHelp("biologger", options);
 			System.exit(0);
 		}
-		
+
+		if (cmd.hasOption("print-keys")) {
+			printKeyMap();
+			System.exit(0);
+		}
+
 		String outDir = System.getProperty("user.dir");
 		if (cmd.hasOption("output")) {
 			outDir = cmd.getOptionValue("output");

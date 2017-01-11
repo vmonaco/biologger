@@ -1,7 +1,10 @@
-package com.vmonaco.bbl;
+package com.vmonaco.bio;
 
 import java.util.List;
 import java.util.Map;
+
+import com.vmonaco.bio.events.BioEvent;
+
 import java.util.HashMap;
 
 import java.io.File;
@@ -9,9 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
-import com.vmonaco.bbl.events.BioEvent;
-
-public class ConsumerCSV implements BioEventConsumer {
+public class ConsumerCSV implements Consumer {
 
 	Map<Class<? extends BioEvent>, PrintWriter> mPrintWriters = new HashMap<Class<? extends BioEvent>, PrintWriter>();
 

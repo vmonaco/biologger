@@ -1,4 +1,4 @@
-package com.vmonaco.bbl;
+package com.vmonaco.bio;
 
 import java.awt.Rectangle;
 import java.util.HashMap;
@@ -12,10 +12,10 @@ import org.jnativehook.mouse.NativeMouseInputListener;
 import org.jnativehook.mouse.NativeMouseWheelEvent;
 import org.jnativehook.mouse.NativeMouseWheelListener;
 
-import com.vmonaco.bbl.events.BioClickEvent;
-import com.vmonaco.bbl.events.BioKeystrokeEvent;
-import com.vmonaco.bbl.events.BioMotionEvent;
-import com.vmonaco.bbl.events.BioWheelEvent;
+import com.vmonaco.bio.events.BioClickEvent;
+import com.vmonaco.bio.events.BioKeystrokeEvent;
+import com.vmonaco.bio.events.BioMotionEvent;
+import com.vmonaco.bio.events.BioWheelEvent;
 
 public class Listener implements NativeKeyListener, NativeMouseWheelListener, NativeMouseInputListener {
 	private static final int CAPTURE_DELTA_X = 100;
@@ -43,7 +43,8 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 		bioEvent.x = event.getX();
 		bioEvent.y = event.getY();
 		bioEvent.modifier_code = event.getModifiers();
-		bioEvent.modifier_name = NativeMouseEvent.getModifiersText(event.getModifiers()).toLowerCase();
+		bioEvent.modifier_name = NativeMouseEvent.getModifiersText(
+				event.getModifiers()).toLowerCase().replace(' ','_');
 
 		mBuffer.addEvent(bioEvent);
 
@@ -58,7 +59,8 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 		bioEvent.x = event.getX();
 		bioEvent.y = event.getY();
 		bioEvent.modifier_code = event.getModifiers();
-		bioEvent.modifier_name = NativeMouseEvent.getModifiersText(event.getModifiers()).toLowerCase();
+		bioEvent.modifier_name = NativeMouseEvent.getModifiersText(
+				event.getModifiers()).toLowerCase().replace(' ','_');
 		bioEvent.dragged = 1;
 
 		mBuffer.addEvent(bioEvent);
@@ -74,7 +76,8 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 		bioEvent.x = event.getX();
 		bioEvent.y = event.getY();
 		bioEvent.modifier_code = event.getModifiers();
-		bioEvent.modifier_name = NativeMouseEvent.getModifiersText(event.getModifiers()).toLowerCase();
+		bioEvent.modifier_name = NativeMouseEvent.getModifiersText(
+				event.getModifiers()).toLowerCase().replace(' ','_');
 		bioEvent.dragged = 0;
 
 		mBuffer.addEvent(bioEvent);
@@ -93,7 +96,8 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 		bioEvent.press_time = event.getWhen();
 		bioEvent.button_code = event.getButton();
 		bioEvent.modifier_code = event.getModifiers();
-		bioEvent.modifier_name = NativeMouseEvent.getModifiersText(event.getModifiers()).toLowerCase();
+		bioEvent.modifier_name = NativeMouseEvent.getModifiersText(
+				event.getModifiers()).toLowerCase().replace(' ','_');
 		bioEvent.press_x = event.getX();
 		bioEvent.press_y = event.getY();
 
@@ -131,9 +135,9 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 
 		bioEvent.press_time = event.getWhen();
 		bioEvent.key_code = event.getKeyCode();
-		bioEvent.key_string = NativeKeyEvent.getKeyText(event.getKeyCode()).toLowerCase();
+		bioEvent.key_string = NativeKeyEvent.getKeyText(event.getKeyCode()).toLowerCase().replace(' ', '_');
 		bioEvent.modifier_code = event.getModifiers();
-		bioEvent.modifier_name = NativeKeyEvent.getModifiersText(event.getModifiers()).toLowerCase();
+		bioEvent.modifier_name = NativeKeyEvent.getModifiersText(event.getModifiers()).toLowerCase().replace(' ', '_');
 		bioEvent.key_location = event.getKeyLocation();
 
 		mActiveKeys.put(event.getRawCode(), bioEvent);

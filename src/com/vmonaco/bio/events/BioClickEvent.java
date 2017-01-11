@@ -1,13 +1,14 @@
-package com.vmonaco.bbl.events;
+package com.vmonaco.bio.events;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import java.util.Base64;
 
-import com.vmonaco.bbl.BioLogger;
-import com.vmonaco.bbl.Utility;
+import com.vmonaco.bio.BioLogger;
+import com.vmonaco.bio.Utility;
+
+import java.util.Base64;
 
 public class BioClickEvent implements BioEvent {
 

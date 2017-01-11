@@ -1,9 +1,10 @@
-package com.vmonaco.bbl;
+package com.vmonaco.bio;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
@@ -13,8 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 import javax.swing.border.Border;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.Element;
 
 public class GUI {
 
@@ -22,7 +27,63 @@ public class GUI {
 	private JLabel mStatusLabel;
 	private Logger mLogger;
 
-	public GUI(final BioLogger app) {
+	private class TextAreaHandler extends java.util.logging.Handler {
+
+		private JTextArea mTextArea;
+		private int mMaxLines;
+
+		public TextAreaHandler(int rows, int columns, int maxLines) {
+			mMaxLines = maxLines;
+			mTextArea = new JTextArea(rows, columns);
+			mTextArea.setEditable(false);
+			mTextArea.setHighlighter(null);
+
+			DefaultCaret caret = (DefaultCaret) mTextArea.getCaret();
+			caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		}
+
+		@Override
+		public void publish(final LogRecord record) {
+
+			SwingWorker<String, String> worker = new SwingWorker<String, String>() {
+				@Override
+				protected String doInBackground() throws Exception {
+					if (mTextArea.getLineCount() > mMaxLines) {
+						// remove the first line
+						Element root = mTextArea.getDocument().getDefaultRootElement();
+						Element first = root.getElement(0);
+						try {
+							mTextArea.getDocument().remove(first.getStartOffset(), first.getEndOffset());
+						} catch (BadLocationException e) {
+							e.printStackTrace();
+						}
+					}
+					mTextArea.append(record.getMessage() + "\n");
+					mTextArea.setCaretPosition(mTextArea.getDocument().getLength());
+					return null;
+				}
+			};
+
+			worker.execute();
+		}
+
+		public JTextArea getTextArea() {
+			return this.mTextArea;
+		}
+
+		@Override
+		public void close() throws SecurityException {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void flush() {
+			// TODO Auto-generated method stub
+		}
+
+	}
+
+	public GUI(final BioLogger app, String outDir) {
 
 		JPanel userDataPanel = new JPanel();
 		mStatusLabel = new JLabel("Starting up...");
@@ -62,14 +123,11 @@ public class GUI {
 		frame.setTitle("Behavioral Biometrics Logger");
 		frame.setAlwaysOnTop(false);
 		frame.setVisible(true);
-	}
 
-	public void setStatus(String status) {
-		mStatusLabel.setText(status);
+		mStatusLabel.setText("Saving files to: " + outDir);
 	}
 
 	public void alert(String text) {
-
 		JOptionPane.showMessageDialog(frame, text);
 	}
 }

@@ -1,6 +1,6 @@
-package com.vmonaco.bbl.events;
+package com.vmonaco.bio.events;
 
-import com.vmonaco.bbl.Utility;
+import com.vmonaco.bio.Utility;
 
 public class BioWheelEvent implements BioEvent {
 

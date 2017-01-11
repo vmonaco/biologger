@@ -1,4 +1,4 @@
-package com.vmonaco.bbl;
+package com.vmonaco.bio;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,12 +9,12 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.vmonaco.bbl.events.BioEvent;
+import com.vmonaco.bio.events.BioEvent;
 
 public class Buffer {
 	public static final String TAG = "BioKeyboard/Buffer";
 
-	private final List<BioEventConsumer> mConsumers; // Immutable
+	private final List<Consumer> mConsumers; // Immutable
 
 	// Guarded by this. We still need to synchronize access so the operations on
 	// the queue are atomic
@@ -32,7 +32,7 @@ public class Buffer {
 			}
 
 			List<BioEvent> unmodifiableBatch = Collections.unmodifiableList(batch);
-			for (BioEventConsumer consumer : mConsumers) {
+			for (Consumer consumer : mConsumers) {
 				consumer.onEventsReceived(Buffer.this, unmodifiableBatch);
 			}
 		}
@@ -40,17 +40,17 @@ public class Buffer {
 	private final Runnable mShutdownTask = new Runnable() { // Thread safe
 		@Override
 		public void run() {
-			for (BioEventConsumer consumer : mConsumers) {
+			for (Consumer consumer : mConsumers) {
 				consumer.onSessionEnd(Buffer.this);
 			}
 		}
 	};
 
-	private static final int BUFFER_CAPACITY = 10;
+	private static final int BUFFER_CAPACITY = 1000;
 	private static final int SENDING_THRESHOLD = 1; // For safety
 
-	public Buffer(BioEventConsumer... eventConsumers) {
-		mConsumers = Collections.unmodifiableList(new ArrayList<BioEventConsumer>(Arrays.asList(eventConsumers)));
+	public Buffer(Consumer... eventConsumers) {
+		mConsumers = Collections.unmodifiableList(new ArrayList<Consumer>(Arrays.asList(eventConsumers)));
 	}
 
 	public void addEvent(BioEvent event) {

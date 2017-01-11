@@ -1,8 +1,6 @@
 ## BioLogger
 
-Cross-platform keyboard and mouse event capture tool.
-
-This application uses the [jnativehook](https://github.com/kwhat/jnativehook/) library to register system-wide hooks for keyboard and mouse events. The types of events captured include: keystrokes, mouse motion, mouse clicks, and scrolling (mouse wheel). The events are recorded to CSV files (one file for each event type).
+`biologger` is a cross-platform keyboard and mouse event capture tool. It uses the [jnativehook](https://github.com/kwhat/jnativehook/) library to register system-wide hooks for keyboard and mouse events. The types of events captured include: keystrokes, mouse motion, mouse clicks, and scrolling (mouse wheel). The events are recorded to CSV files (one file for each event type).
 
 To run, download the [latest release](https://github.com/vmonaco/biologger/releases/download/v1.0/biologger-1.0.jar) and run the executable jar. From the command line,
 
@@ -18,10 +16,28 @@ usage: biologger
  -iw,--ignore-wheel       ignore mouse wheel events
  -nw,--no-window          don't start the user interface
  -o,--output <arg>        output directory
+ -pk,--print-keys         print the full key map and exit
  -v,--verbose             verbose mode
 ```
 
-## Keystroke events
+To be sure the events are being capture, run `biologger` in verbose mode:
+
+    $ java -jar -biologger.jar -v
+    Jan 11, 2017 9:55:48 AM com.vmonaco.bio.Listener nativeMouseMoved
+    INFO: Mouse moved:: position: 589, 488
+    Jan 11, 2017 9:55:48 AM com.vmonaco.bio.Listener nativeMouseMoved
+    INFO: Mouse moved:: position: 590, 492
+    Jan 11, 2017 9:55:48 AM com.vmonaco.bio.Listener nativeMouseMoved
+    INFO: Mouse moved:: position: 594, 499
+    Jan 11, 2017 9:55:48 AM com.vmonaco.bio.Listener nativeMouseMoved
+    INFO: Mouse moved:: position: 598, 505
+    ...
+
+### Event attributes and descriptions
+
+The following tables describe each of the attributes (columns in the CSV files) for each event type.
+
+#### Keystroke
 
 Name | Description
 --- | ---
@@ -33,7 +49,7 @@ modifier_code | modifier key codes pressed during the event
 modifier_name | modifier key names pressed during the event (e.g., ctr+shift)
 location | 2 for left, 3 for right, 1 for keys that have a single location
 
-## Mouse motion events
+#### Mouse motion
 
 Name | Description
 --- | ---
@@ -44,7 +60,7 @@ modifier_code | modifier key codes pressed during the event
 modifier_name | modifier key names pressed during the event
 dragged | 1 if a mouse button was held down during the event, 0 otherwise
 
-## Mouse click events
+#### Mouse click
 
 Name | Description
 --- | ---
@@ -77,7 +93,7 @@ image.show()
   <img src="figures/click.png"><br><br>
 </div>
 
-## Mouse wheel events
+#### Mouse wheel
 
 Name | Description
 --- | ---
