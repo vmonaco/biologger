@@ -54,6 +54,7 @@ public class BioLogger {
 			GlobalScreen.registerNativeHook();
 		} catch (NativeHookException e) {
 			BioLogger.LOGGER.severe("There was a problem registering the native hook.");
+			e.printStackTrace();
 			if (System.getProperty("os.name").toLowerCase().contains("mac")) {
 				BioLogger.LOGGER.severe("Make sure that Assistive Devices is enabled.");
 				BioLogger.LOGGER.info(
