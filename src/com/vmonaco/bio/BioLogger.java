@@ -56,8 +56,8 @@ public class BioLogger {
 			BioLogger.LOGGER.severe("There was a problem registering the native hook.");
 			if (System.getProperty("os.name").toLowerCase().contains("mac")) {
 				BioLogger.LOGGER.severe("Make sure that Assistive Devices is enabled.");
-				BioLogger.LOGGER.info(
-						"Go to Preferences->Universal Access and make sure the checkbox 'Enabled Access for Assistive Devices' is marked.");
+				BioLogger.LOGGER.severe(
+						"Go to System Preferences->Security & Privacy->Accessibility");
 			}
 			e.printStackTrace();
 			return;
