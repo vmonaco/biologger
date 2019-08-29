@@ -8,7 +8,6 @@ import com.vmonaco.bio.events.BioEvent;
 import java.util.HashMap;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
@@ -23,11 +22,11 @@ public class ConsumerCSV implements Consumer {
 				boolean writeHeader = !file.exists();
 				PrintWriter pw = new PrintWriter(new FileOutputStream(file, true));
 				if (writeHeader) {
-					pw.write(Utility.csvString(c.newInstance().header()) + "\n");
+					pw.write(Utility.csvString(c.getDeclaredConstructor().newInstance().header()) + "\n");
 					pw.flush();
 				}
 				mPrintWriters.put(c, pw);
-			} catch (InstantiationException | IllegalAccessException | FileNotFoundException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(1);
 			}

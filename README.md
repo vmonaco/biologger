@@ -105,3 +105,13 @@ x | absolute x location of the pointer device
 y | absolute y location of the pointer device
 modifier_code | modifier key codes pressed during the event
 modifier_name | modifier key names pressed during the event
+
+### Build instructions
+
+See the Makefile. To build the jar:
+
+    $ make jar
+
+To run the jar:
+
+    $ java -jar biologger.jar

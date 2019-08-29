@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: com.vmonaco.bio.BioLogger
+Class-Path: lib/commons-cli-1.4.jar lib/jnativehook-2.1.0.jar
