@@ -26,7 +26,7 @@ import com.vmonaco.bio.events.BioMotionEvent;
 import com.vmonaco.bio.events.BioWheelEvent;
 
 public class BioLogger {
-	public static final Logger LOGGER = Logger.getLogger("com.vmonaco.bbl");
+	public static final Logger LOGGER = Logger.getLogger("com.vmonaco.bio");
 
 	private ConsumerCSV mFileCSV;
 	private Buffer mBuffer;

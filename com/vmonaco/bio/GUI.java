@@ -89,7 +89,7 @@ public class GUI {
 		mStatusLabel = new JLabel("Starting up...");
 		userDataPanel.add(mStatusLabel);
 
-		mLogger = Logger.getLogger("com.vmonaco.bbl");
+		mLogger = Logger.getLogger("com.vmonaco.bio");
 		TextAreaHandler th = new TextAreaHandler(20, 60, 20);
 		mLogger.addHandler(th);
 
