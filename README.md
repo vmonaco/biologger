@@ -2,7 +2,7 @@
 
 `biologger` is a cross-platform keyboard and mouse event capture tool. It uses the [jnativehook](https://github.com/kwhat/jnativehook/) library to register system-wide hooks for keyboard and mouse events. The types of events captured include: keystrokes, mouse motion, mouse clicks, and scrolling (mouse wheel). The events are recorded to CSV files (one file for each event type).
 
-To run, download the [latest release](https://github.com/vmonaco/biologger/releases/download/v1.1/biologger-1.1.jar) and run the executable jar. From the command line,
+To run, download the [latest release](https://github.com/vmonaco/biologger/releases/download/v1.1/biologger.jar) and run the executable jar. From the command line,
 
     $ java -jar biologger.jar
 
