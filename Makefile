@@ -13,7 +13,10 @@ run : $(classes)
 	java -cp $(classpath) com.vmonaco.bio.BioLogger
 
 jar : build
-	jar cvfm biologger.jar MANIFEST.MF com lib
+	jar xf lib/jnativehook-2.1.0.jar org
+	jar xf lib/commons-cli-1.4.jar org
+	jar cvfm biologger.jar MANIFEST.MF com org
+	rm -rf org
 
 runjar :
 	java -jar biologger.jar
