@@ -142,7 +142,7 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 
 		mActiveKeys.put(event.getRawCode(), bioEvent);
 
-		BioLogger.LOGGER.info("Key pressed:: key code: " + bioEvent.key_code + ", key name: " + bioEvent.key_string);
+		BioLogger.LOGGER.info(bioEvent.press_time + ", key pressed:: key code: " + bioEvent.key_code + ", key name: " + bioEvent.key_string);
 	}
 
 	@Override

@@ -1,8 +1,8 @@
 #!/usr/bin/env make -f
 
 sources := $(wildcard com/vmonaco/bio/*.java) $(wildcard com/vmonaco/bio/events/*.java)
-tmp_classes := $(wildcard com/vmonaco/bio/*.class) $(wildcard com/vmonaco/bio/events/*.class)
-classes := $(subst $$,\$$,$(tmp_classes))
+classes := $(wildcard com/vmonaco/bio/*.class) $(wildcard com/vmonaco/bio/events/*.class)
+# classes := $(subst $$,\$$,$(tmp_classes))
 
 classpath := .:lib/jnativehook-2.1.0.jar:lib/commons-cli-1.4.jar
 
