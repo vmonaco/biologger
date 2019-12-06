@@ -1,5 +1,6 @@
 package com.vmonaco.bio;
 
+import java.awt.Font;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,6 +38,7 @@ public class GUI {
 			mTextArea = new JTextArea(rows, columns);
 			mTextArea.setEditable(false);
 			mTextArea.setHighlighter(null);
+			mTextArea.setFont(new Font("monospaced", Font.PLAIN, 12));
 
 			DefaultCaret caret = (DefaultCaret) mTextArea.getCaret();
 			caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
@@ -48,7 +50,7 @@ public class GUI {
 			SwingWorker<String, String> worker = new SwingWorker<String, String>() {
 				@Override
 				protected String doInBackground() throws Exception {
-					if (mTextArea.getLineCount() > mMaxLines) {
+				 	while (mTextArea.getLineCount() > mMaxLines) {
 						// remove the first line
 						Element root = mTextArea.getDocument().getDefaultRootElement();
 						Element first = root.getElement(0);
@@ -90,7 +92,7 @@ public class GUI {
 		userDataPanel.add(mStatusLabel);
 
 		mLogger = Logger.getLogger("com.vmonaco.bio");
-		TextAreaHandler th = new TextAreaHandler(20, 60, 20);
+		TextAreaHandler th = new TextAreaHandler(40, 80, 40);
 		mLogger.addHandler(th);
 
 		final JButton exit = new JButton("Exit");

@@ -48,7 +48,7 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 
 		mBuffer.addEvent(bioEvent);
 
-		BioLogger.LOGGER.log(Level.INFO, "Mouse wheel, direction: " + bioEvent.rotation);
+		BioLogger.LOGGER.log(Level.INFO, event.paramString()); //"mousewheel," + Utility.csvString(bioEvent.values()));
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 
 		mBuffer.addEvent(bioEvent);
 
-		BioLogger.LOGGER.info("Mouse dragged:: position: " + bioEvent.x + ", " + bioEvent.y);
+		BioLogger.LOGGER.log(Level.INFO, "mousedrag," + Utility.csvString(bioEvent.values()));
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 
 		mBuffer.addEvent(bioEvent);
 
-		BioLogger.LOGGER.info("Mouse moved:: position: " + bioEvent.x + ", " + bioEvent.y);
+		BioLogger.LOGGER.log(Level.INFO, "mousemove," + Utility.csvString(bioEvent.values()));
 	}
 
 	@Override
@@ -107,8 +107,7 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 
 		mActiveButtons.put(event.getButton(), bioEvent);
 
-		BioLogger.LOGGER.info("Mouse pressed:: button: " + bioEvent.button_code + ", position: " + bioEvent.press_x
-				+ ", " + bioEvent.press_y);
+		BioLogger.LOGGER.log(Level.INFO, "mousedown," + Utility.csvString(bioEvent.values()));
 	}
 
 	@Override
@@ -121,8 +120,7 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 
 		mBuffer.addEvent(bioEvent);
 
-		BioLogger.LOGGER.info("Mouse released:: button: " + bioEvent.button_code + ", position: " + bioEvent.release_x
-				+ ", " + bioEvent.release_y);
+		BioLogger.LOGGER.log(Level.INFO, "mouseup," + Utility.csvString(bioEvent.values()));
 	}
 
 	@Override
@@ -142,7 +140,7 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 
 		mActiveKeys.put(event.getRawCode(), bioEvent);
 
-		BioLogger.LOGGER.info(bioEvent.press_time + ", key pressed:: key code: " + bioEvent.key_code + ", key name: " + bioEvent.key_string);
+		BioLogger.LOGGER.log(Level.INFO, "keydown," + event.getWhen()); //Utility.csvString(bioEvent.values()));
 	}
 
 	@Override
@@ -151,7 +149,7 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 		bioEvent.release_time = event.getWhen();
 		mBuffer.addEvent(bioEvent);
 
-		BioLogger.LOGGER.info("Key released:: key code: " + bioEvent.key_code + ", key name: " + bioEvent.key_string);
+		BioLogger.LOGGER.log(Level.INFO, "keyup," + event.getWhen()); //Utility.csvString(bioEvent.values()));
 	}
 
 	@Override
