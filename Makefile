@@ -4,7 +4,7 @@ sources := $(wildcard com/vmonaco/bio/*.java) $(wildcard com/vmonaco/bio/events/
 classes := $(wildcard com/vmonaco/bio/*.class) $(wildcard com/vmonaco/bio/events/*.class)
 # classes := $(subst $$,\$$,$(tmp_classes))
 
-jnativehook := jnativehook-2.1.20191206.jar
+jnativehook := jnativehook-2.1.0.jar
 
 classpath := .:lib/commons-cli-1.4.jar:lib/$(jnativehook)
 
