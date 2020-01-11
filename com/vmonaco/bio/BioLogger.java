@@ -64,29 +64,24 @@ public class BioLogger {
 		}
 
 		if (mClassMap.containsKey(BioKeystrokeEvent.class)) {
-			GlobalScreen.addNativeKeyListener(mListener);
+			GlobalScreen.getInstance().addNativeKeyListener(mListener);
 		}
 
 		if (mClassMap.containsKey(BioClickEvent.class)) {
-			GlobalScreen.addNativeMouseListener(mListener);
+			GlobalScreen.getInstance().addNativeMouseListener(mListener);
 		}
 
 		if (mClassMap.containsKey(BioMotionEvent.class)) {
-			GlobalScreen.addNativeMouseMotionListener(mListener);
+			GlobalScreen.getInstance().addNativeMouseMotionListener(mListener);
 		}
 
 		if (mClassMap.containsKey(BioWheelEvent.class)) {
-			GlobalScreen.addNativeMouseWheelListener(mListener);
+			GlobalScreen.getInstance().addNativeMouseWheelListener(mListener);
 		}
 	}
 
 	public void stopLogging() {
-		try {
-			GlobalScreen.unregisterNativeHook();
-		} catch (NativeHookException e) {
-			e.printStackTrace();
-		}
-
+		GlobalScreen.unregisterNativeHook();
 		mBuffer.stop();
 	}
 
