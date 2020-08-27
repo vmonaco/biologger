@@ -154,6 +154,10 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 	public void nativeMouseReleased(NativeMouseEvent event) {
 		long now = System.currentTimeMillis();
 
+		if (!mActiveButtons.containsKey(event.getButton())) {
+			return;
+		}
+
 		BioClickEvent bioEvent = mActiveButtons.remove(event.getButton());
 		bioEvent.release_time = now;
 		bioEvent.release_x = event.getX();
@@ -187,6 +191,10 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 	public void nativeKeyReleased(NativeKeyEvent event) {
 		long now = System.currentTimeMillis();
 
+		if (!mActiveKeys.containsKey(event.getRawCode())) {
+			return;
+		}
+
 		BioKeystrokeEvent bioEvent = mActiveKeys.remove(event.getRawCode());
 		bioEvent.release_time = now;
 		mBuffer.addEvent(bioEvent);
@@ -205,8 +213,9 @@ public class Listener implements NativeKeyListener, NativeMouseWheelListener, Na
 	}
 
 	public void stop() {
-		if (mActiveMotionTrack == null) {
+		if (mActiveMotionTrack != null) {
 			mBuffer.addEvent(mActiveMotionTrack);
+			mActiveMotionTrack = null;
 		}
 	}
 }

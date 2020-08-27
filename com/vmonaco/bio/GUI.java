@@ -75,12 +75,12 @@ public class GUI {
 
 		@Override
 		public void close() throws SecurityException {
-			// TODO Auto-generated method stub
+			// Empty
 		}
 
 		@Override
 		public void flush() {
-			// TODO Auto-generated method stub
+			// Empty
 		}
 
 	}
@@ -97,11 +97,15 @@ public class GUI {
 
 		final JButton exit = new JButton("Exit");
 		exit.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				app.stopLogging();
-				app.close();
+				// To give a chance to process the event that invoked this button
+				try {
+		    	Thread.sleep(50);
+				} catch(InterruptedException ex) {
+		    	Thread.currentThread().interrupt();
+				}
+				System.exit(0);
 			}
 		});
 

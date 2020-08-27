@@ -83,17 +83,33 @@ public class BioLogger {
 	}
 
 	public void stopLogging() {
-		mListener.stop();
-		GlobalScreen.removeNativeKeyListener(mListener);
-		GlobalScreen.removeNativeMouseListener(mListener);
-		GlobalScreen.removeNativeMouseMotionListener(mListener);
-		GlobalScreen.removeNativeMouseWheelListener(mListener);
-		mBuffer.stop();
-	}
+		// Remove the listeners
+		if (mClassMap.containsKey(BioKeystrokeEvent.class)) {
+			GlobalScreen.removeNativeKeyListener(mListener);
+		}
 
-	public void close() {
-		System.runFinalization();
-		System.exit(0);
+		if (mClassMap.containsKey(BioClickEvent.class)) {
+			GlobalScreen.removeNativeMouseListener(mListener);
+		}
+
+		if (mClassMap.containsKey(BioMotionEvent.class) || mClassMap.containsKey(BioMotionTrackEvent.class)) {
+			GlobalScreen.removeNativeMouseMotionListener(mListener);
+		}
+
+		if (mClassMap.containsKey(BioWheelEvent.class)) {
+			GlobalScreen.removeNativeMouseWheelListener(mListener);
+		}
+
+		// Stop the listener and buffer
+		mListener.stop();
+		mBuffer.stop();
+
+		// Give the buffer a chance to write everything to disk
+		try {
+    	Thread.sleep(100);
+		} catch(InterruptedException ex) {
+    	Thread.currentThread().interrupt();
+		}
 	}
 
 	public static void printKeyMap() {

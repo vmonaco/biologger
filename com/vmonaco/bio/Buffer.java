@@ -16,13 +16,11 @@ public class Buffer {
 
 	private final List<Consumer> mConsumers; // Immutable
 
-	// Guarded by this. We still need to synchronize access so the operations on
-	// the queue are atomic
+	// Guarded by this. We still need to synchronize access so the operations on the queue are atomic
 	private final BlockingQueue<BioEvent> eventQueue = new ArrayBlockingQueue<BioEvent>(BUFFER_CAPACITY);
 	private boolean mStopped = false; // Guarded by this
 
-	private final ExecutorService mDrainingExecutor = Executors.newSingleThreadExecutor(); // Thread
-																							// safe
+	private final ExecutorService mDrainingExecutor = Executors.newSingleThreadExecutor(); // Thread safe
 	private final Runnable mDrainingTask = new Runnable() { // Thread safe
 		@Override
 		public void run() {
