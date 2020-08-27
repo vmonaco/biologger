@@ -2,9 +2,8 @@
 
 sources := $(wildcard com/vmonaco/bio/*.java) $(wildcard com/vmonaco/bio/events/*.java)
 classes := $(wildcard com/vmonaco/bio/*.class) $(wildcard com/vmonaco/bio/events/*.class)
-# classes := $(subst $$,\$$,$(tmp_classes))
 
-jnativehook := jnativehook-1.1.5.jar
+jnativehook := jnativehook-2.1.0.jar
 
 classpath := .:lib/commons-cli-1.4.jar:lib/$(jnativehook)
 
@@ -24,4 +23,4 @@ runjar :
 	java -jar biologger.jar
 
 clean :
-	rm -f $(classes)
+	rm -f $(subst $$,\$$,$(classes))

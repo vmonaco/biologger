@@ -2,35 +2,35 @@
 
 `biologger` is a cross-platform keyboard and mouse event capture tool. It uses the [jnativehook](https://github.com/kwhat/jnativehook/) library to register system-wide hooks for keyboard and mouse events. The types of events captured include: keystrokes, mouse motion, mouse clicks, and scrolling (mouse wheel). The events are recorded to CSV files (one file for each event type).
 
-To run, download the [latest release](https://github.com/vmonaco/biologger/releases/download/v1.1/biologger.jar) and run the executable jar. From the command line,
+To run, download the [latest release](https://github.com/vmonaco/biologger/releases/download/v1.3/biologger.jar) and run the executable jar. From the command line,
 
     $ java -jar biologger.jar
 
 By default, the CSV files will be created in the current working directory. To specify a different output directory, use the `-o` option. Certain event types can also be ignored, such as `-im` to ignore mouse motion events. The full usage is:
 ```
 usage: biologger
- -h,--help                print this help message
- -ic,--ignore-click       ignore mouse click events
- -ik,--ignore-keystroke   ignore keystroke events
- -im,--ignore-motion      ignore ignore mouse motion events
- -iw,--ignore-wheel       ignore mouse wheel events
- -nw,--no-window          don't start the user interface
- -o,--output <arg>        output directory
- -pk,--print-keys         print the full key map and exit
- -v,--verbose             verbose mode
+ -h,--help                      print this help message
+ -ic,--ignore-click             ignore mouse click events
+ -ik,--ignore-keystroke         ignore keystroke events
+ -im,--ignore-motion            ignore mouse motion events
+ -iw,--ignore-wheel             ignore mouse wheel events
+ -mt,--motion-threshold <arg>   group motion events within mt milliseconds
+ -nw,--no-window                don't start the user interface
+ -o,--output <arg>              output directory
+ -pk,--print-keys               print the full key map and exit
+ -v,--verbose                   verbose mode
 ```
 
 To be sure the events are being capture, run `biologger` in verbose mode:
 
     $ java -jar -biologger.jar -v
-    Jan 11, 2017 9:55:48 AM com.vmonaco.bio.Listener nativeMouseMoved
-    INFO: Mouse moved:: position: 589, 488
-    Jan 11, 2017 9:55:48 AM com.vmonaco.bio.Listener nativeMouseMoved
-    INFO: Mouse moved:: position: 590, 492
-    Jan 11, 2017 9:55:48 AM com.vmonaco.bio.Listener nativeMouseMoved
-    INFO: Mouse moved:: position: 594, 499
-    Jan 11, 2017 9:55:48 AM com.vmonaco.bio.Listener nativeMouseMoved
-    INFO: Mouse moved:: position: 598, 505
+    Aug 27, 2020 10:50:32 AM com.vmonaco.bio.Listener mouseMoved
+    INFO: mousemove,1598550632149,842,783,40960,num_lock+scroll_lock,0
+    Aug 27, 2020 10:50:32 AM com.vmonaco.bio.Listener mouseMoved
+    INFO: mousemove,1598550632151,841,784,40960,num_lock+scroll_lock,0
+    Aug 27, 2020 10:50:32 AM com.vmonaco.bio.Listener mouseMoved
+    INFO: mousemove,1598550632153,841,786,40960,num_lock+scroll_lock,0
+
     ...
 
 ### Event attributes and descriptions
@@ -58,6 +58,20 @@ x | absolute x location of the pointer (pixels)
 y | absolute y location of the pointer (pixels)
 modifier_code | modifier key codes pressed during the event
 modifier_name | modifier key names pressed during the event
+dragged | 1 if a mouse button was held down during the event, 0 otherwise
+
+#### Mouse track
+
+Name | Description
+--- | ---
+start_time | timestamp (ms)
+start_x | absolute x location of the pointer (pixels) at the start of the track
+start_y | absolute y location of the pointer (pixels) at the start of the track
+end_time | timestamp (ms)
+end_x | absolute x location of the pointer (pixels) at the end of the track
+end_y | absolute y location of the pointer (pixels) at the end of the track
+distance_x | total horizontal distance traveled (pixels)
+distance_y | total vertical distance traveled (pixels)
 dragged | 1 if a mouse button was held down during the event, 0 otherwise
 
 #### Mouse click

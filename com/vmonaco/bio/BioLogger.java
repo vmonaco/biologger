@@ -23,10 +23,12 @@ import com.vmonaco.bio.events.BioClickEvent;
 import com.vmonaco.bio.events.BioEvent;
 import com.vmonaco.bio.events.BioKeystrokeEvent;
 import com.vmonaco.bio.events.BioMotionEvent;
+import com.vmonaco.bio.events.BioMotionTrackEvent;
 import com.vmonaco.bio.events.BioWheelEvent;
 
 public class BioLogger {
 	public static final Logger LOGGER = Logger.getLogger("com.vmonaco.bio");
+	private static final String DEFAULT_MOTION_THRESHOLD = "100";
 
 	private ConsumerCSV mFileCSV;
 	private Buffer mBuffer;
@@ -35,13 +37,13 @@ public class BioLogger {
 	private String mOutDir;
 	private Map<Class<? extends BioEvent>, String> mClassMap;
 
-	public BioLogger(String outDir, boolean showWindow, Map<Class<? extends BioEvent>, String> classMap) {
+	public BioLogger(String outDir, boolean showWindow, Map<Class<? extends BioEvent>, String> classMap, long motionThreshold) {
 		mOutDir = outDir;
 		mClassMap = classMap;
 
 		mFileCSV = new ConsumerCSV(classMap, outDir);
 		mBuffer = new Buffer(mFileCSV);
-		mListener = new Listener(mBuffer);
+		mListener = new Listener(mBuffer, motionThreshold);
 
 		if (showWindow) {
 			mGui = new GUI(this, outDir);
@@ -64,24 +66,28 @@ public class BioLogger {
 		}
 
 		if (mClassMap.containsKey(BioKeystrokeEvent.class)) {
-			GlobalScreen.getInstance().addNativeKeyListener(mListener);
+			GlobalScreen.addNativeKeyListener(mListener);
 		}
 
 		if (mClassMap.containsKey(BioClickEvent.class)) {
-			GlobalScreen.getInstance().addNativeMouseListener(mListener);
+			GlobalScreen.addNativeMouseListener(mListener);
 		}
 
-		if (mClassMap.containsKey(BioMotionEvent.class)) {
-			GlobalScreen.getInstance().addNativeMouseMotionListener(mListener);
+		if (mClassMap.containsKey(BioMotionEvent.class) || mClassMap.containsKey(BioMotionTrackEvent.class)) {
+			GlobalScreen.addNativeMouseMotionListener(mListener);
 		}
 
 		if (mClassMap.containsKey(BioWheelEvent.class)) {
-			GlobalScreen.getInstance().addNativeMouseWheelListener(mListener);
+			GlobalScreen.addNativeMouseWheelListener(mListener);
 		}
 	}
 
 	public void stopLogging() {
-		GlobalScreen.unregisterNativeHook();
+		mListener.stop();
+		GlobalScreen.removeNativeKeyListener(mListener);
+		GlobalScreen.removeNativeMouseListener(mListener);
+		GlobalScreen.removeNativeMouseMotionListener(mListener);
+		GlobalScreen.removeNativeMouseWheelListener(mListener);
 		mBuffer.stop();
 	}
 
@@ -109,9 +115,10 @@ public class BioLogger {
 		options.addOption("o", "output", true, "output directory");
 		options.addOption("nw", "no-window", false, "don't start the user interface");
 		options.addOption("ik", "ignore-keystroke", false, "ignore keystroke events");
-		options.addOption("im", "ignore-motion", false, "ignore ignore mouse motion events");
+		options.addOption("im", "ignore-motion", false, "ignore mouse motion events");
 		options.addOption("ic", "ignore-click", false, "ignore mouse click events");
 		options.addOption("iw", "ignore-wheel", false, "ignore mouse wheel events");
+		options.addOption("mt", "motion-threshold", true, "group motion events within mt milliseconds");
 		options.addOption("pk", "print-keys", false, "print the full key map and exit");
 		options.addOption("v", "verbose", false, "verbose mode");
 		options.addOption("h", "help", false, "print this help message");
@@ -154,6 +161,7 @@ public class BioLogger {
 
 		if (!cmd.hasOption("im")) {
 			classMap.put(BioMotionEvent.class, "mousemotion.csv");
+			classMap.put(BioMotionTrackEvent.class, "mousetrack.csv");
 		}
 
 		if (!cmd.hasOption("ic")) {
@@ -177,7 +185,16 @@ public class BioLogger {
 			LOGGER.addHandler(handler);
 		}
 
-		BioLogger app = new BioLogger(outDir, showWindow, classMap);
+		long motionThreshold = Long.decode(cmd.getOptionValue("mt", DEFAULT_MOTION_THRESHOLD));
+
+		BioLogger app = new BioLogger(outDir, showWindow, classMap, motionThreshold);
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+        public void run() {
+            app.stopLogging();
+        }
+    });
+
 		app.startLogging();
 	}
 }
